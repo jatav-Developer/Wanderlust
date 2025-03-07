@@ -1,0 +1,115 @@
+<% layout('layouts/boilerplate.ejs') -%>
+<body>
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <!-- Listing Details Card -->
+        <div class="card card-listing">
+          
+          <div class="slider">
+            <div class="slides">
+              <div class="slide"><img class="card-img-top" src="<%= listing.image.url %>" alt="Slide 1"></div>
+              <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 2"></div>
+              <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 3"></div>
+              <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/11238628/pexels-photo-11238628.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 3"></div>
+            </div>
+            <div class="controls">
+              <button class="control prev">&#9664;</button>
+              <button class="control next">&#9654;</button>
+            </div>
+            <div class="indicators"></div>
+          </div>
+
+
+          <div class="card-body">
+            <h3 class="card-title text-center mb-3"><%= listing.title %></h3>
+
+            <!-- Listing Details -->
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <strong>Owner :</strong> <%= listing.owner.username %>
+              </li>
+              <li class="list-group-item">
+                <strong>Description:</strong> <%= listing.description %>
+              </li>
+              <li class="list-group-item">
+                <strong>Price:</strong> &#8377; <%= listing.price.toLocaleString("en-IN") %>
+              </li>
+              <li class="list-group-item">
+                <strong>Location:</strong> <%= listing.location %>
+              </li>
+              <li class="list-group-item">
+                <strong>Country:</strong> <%= listing.country %>
+              </li>
+            </ul>
+
+            <!-- Action Buttons -->
+             <% if(currUser && currUser._id.equals(listing.owner._id) ) {%>
+            <div class="mt-4 text-center">
+              <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary me-2 edit-btn">Edit Listing</a>
+              <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">
+                <button class="btn btn-danger delete-btn">Delete Listing</button>
+              </form>
+            </div>  
+            <% } %>
+          </div>
+      </div>
+    </div>
+    <!--  Review Form -->
+    <div class="col-md-8 offset-md-2 mb-3">
+      <hr/>
+      <% if(currUser) { %>
+      <h4>Leave a Review</h4>
+      <form action="/listings/<%= listing._id %>/reviews" method="post" class="needs-validation" novalidate>
+        <div class="mb-3 mt-3">
+          <label for="rating" class="form-label">Rating</label>
+          <fieldset class="starability-slot">
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+          <div class="mb-3 mt-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please add a comment.
+            </div>
+          </div>
+          <button class="btn btn-outline-dark">Submit</button>
+        </div>
+      </form>
+
+      <hr/>
+      <% } %>
+      <p><b>All Review</b></p>
+      <div class="row">
+        <% for(review of listing.reviews) { %>
+          <div class="card col-5 ms-3 mb-3">
+            <div class="card-body">
+              <h5 class="card-title">@<i><%= review.author.username %> </i></h5>
+              <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+              <p class="card-text"><%= review.comment %></p>
+              <% if(currUser && currUser._id.equals(review.author._id) ) {%>
+              <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3" method="post">
+                <button class="btn btn-sm btn-dark">Delete</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+          <% }%>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>

@@ -1,0 +1,43 @@
+<% layout('layouts/boilerplate.ejs') -%>
+  <body>
+    <% if(Listings=="" ){ %>
+      <br><br><br><br>
+      <h3 class="mb-4 text-center">Data Not Found</h3>
+      <% }else{ %>
+      
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-3">
+          <% for(let listing of Listings) { %>
+
+            <div class="col">
+              <div class="card h-100 card-listing">
+                
+                <div class="slider">
+                  <div class="slides">
+                    <div class="slide"><img class="card-img-top" src="<%= listing.image.url %>" alt="Slide 1"></div>
+                    <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 2"></div>
+                    <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 3"></div>
+                    <div class="slide"><img class="card-img-top" src="https://images.pexels.com/photos/11238628/pexels-photo-11238628.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Slide 3"></div>
+                  </div>
+                  <div class="controls">
+                    <button class="control prev">&#9664;</button>
+                    <button class="control next">&#9654;</button>
+                  </div>
+                  <div class="indicators"></div>
+                </div>
+
+                <div class="card-body">
+                  <a href="/listings/<%= listing._id %>" id="a">
+                    <h6 class="card-title">
+                      <%=listing.location%>,<%=listing.country%>
+                    </h6>
+                  </a>
+                  <p class="card-text"><b>&#8377; <%= listing.price.toLocaleString("en-IN") %></b> night</p>
+                </div>
+              </div>
+            </div>
+
+            <% } %>
+        </div>
+        <% } %>
+
+  </body>
